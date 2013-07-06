@@ -50,8 +50,10 @@ end
 -----------------------------------------------------------------------------------------
 -- Aliases
 local Draw = love.graphics.draw
-local Play = love.audio.play
 local PauseAllAudio = love.audio.pause
+local Play = love.audio.play
+--function Play(x)
+--end
 
 -- Sounds
 local titlemusic = Music("title.ogg")
@@ -96,40 +98,59 @@ end
 local stones = {}
 local jumptimer = 0
 local isjumping = false
-local gametimer = 0
+local gametimer = 1
 
 local currentxp = 0
 local collided = false
 local currentlevel = 1
+local jumpedstone = false
 
-function game_draw()
-	local jumpheight = 0
-	if isjumping then
-		jumpheight = 210 -- *math.sin(3.14*jumptimer)
-	else
-		jumpheight = 0
-	end
-    Draw(gamebkg, 0,0)
-	Draw(player, 72,300 - jumpheight)
-	
+function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
 	local stonepos = 0
 	-- 0.68 = player placing
 	stonepos = from01(-256, wrap01(gametimer-0.38), 800)
-	Draw(stone, stonepos, 340)
-	
 	local col = false
-	if jumpheight < 60 and stonepos > -1 and stonepos < 160 then
+	if stonepos > -1 and stonepos < 160 then
 		col = true
 	else
 		col = false
 	end
 	
+	local dojump = isjumping
+	
+	if col and jumpedstone then
+		dojump = true
+	end
+	
+	local jumpheight = 0
+	if dojump then
+		jumpheight = 210
+	else
+		jumpheight = 0
+	end
+	
+	return jumpheight,stonepos,col
+end
+
+function game_draw()
+	local jumpheight,stonepos,col = game_logic()
+	Draw(gamebkg, 0,0)
+	Draw(player, 72,300 - jumpheight)
+	Draw(stone, stonepos, 340)
+	
 	if col then
-		love.graphics.print("Collision!", 400, 300)
-		if collided == false then
-			collided = true
-			Play(test)
+		if jumpheight < 60 then
+			if jumpedstone==false then
+				love.graphics.print("Collision!", 400, 300)
+				if collided == false then
+					collided = true
+					Play(test)
+				end
+			end
+		else
+			-- jumping over the sonte
+			jumpedstone = true
 		end
 	end
 	
@@ -151,6 +172,7 @@ function game_update(dt)
 			end
 		end
 		collided = false
+		jumpedstone = false
 	end
 	
 	if love.keyboard.isDown(JUMPKEY) then
@@ -164,6 +186,8 @@ function game_update(dt)
 		isjumping = false
 		jumptimer = 0
 	end
+	
+	local jumpheight,stonepos,col = game_logic()
 end
 function game_setup()
 	Play(foresta)
