@@ -67,6 +67,7 @@ local title = Img("title.png")
 local gamebkg = Img("world.png")
 local player = Img("player.png")
 local stone = Img("stone.png")
+local tree = Img("tree.png")
 
 -----------------------------------------------------------------------------------------
 function title_onkey(key)
@@ -99,6 +100,7 @@ local stones = {}
 local jumptimer = 0
 local isjumping = false
 local gametimer = 1
+local enemytype = 1
 
 local currentxp = 0
 local collided = false
@@ -109,7 +111,8 @@ function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
 	local stonepos = 0
 	-- 0.68 = player placing
-	stonepos = from01(-256, wrap01(gametimer-0.38), 800)
+	-- was wrap01(gametimer-0.38)
+	stonepos = from01(-256, gametimer, 800)
 	local col = false
 	if stonepos > -1 and stonepos < 160 then
 		col = true
@@ -125,7 +128,7 @@ function game_logic()
 	
 	local jumpheight = 0
 	if dojump then
-		jumpheight = 210
+		jumpheight = 180
 	else
 		jumpheight = 0
 	end
@@ -136,8 +139,16 @@ end
 function game_draw()
 	local jumpheight,stonepos,col = game_logic()
 	Draw(gamebkg, 0,0)
+	
+	if enemytype == 1 then
+		Draw(stone, stonepos, 340)
+	elseif enemytype == 2 then
+		Draw(tree, stonepos, 250)
+	else
+		love.graphics.print("Unknown enemytype" .. enemytype, stonepos, 340)
+	end
+	
 	Draw(player, 72,300 - jumpheight)
-	Draw(stone, stonepos, 340)
 	
 	if col then
 		if jumpheight < 60 then
@@ -155,7 +166,7 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel, 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. enemytype, 0, 0, 780, "right")
 end
 function game_onkey(key)
 end
@@ -163,6 +174,7 @@ function game_update(dt)
 	gametimer = gametimer - dt * (90/60)
 	if gametimer < 0 then
 		gametimer = gametimer + 1
+		enemytype = math.random(2)
 		if collided == false then
 			currentxp = currentxp + 1
 			if currentxp >= 20 then
