@@ -1,7 +1,7 @@
-JUMPKEY = " "
+JUMPKEY = "up"
 SLIDEKEY = "down"
 SWORDKEY = "right"
-FORESTDATA = "- - - o o o 8 8 8"
+FORESTDATA = " --- ooo 888 rrr "
 GODMODE = false
 
 STATEMENU = 0
@@ -75,6 +75,7 @@ end
 
 function love.load()
 	love.graphics.setFont(love.graphics.newFont("AlexBrush-Regular-OTF.otf", 30))
+	math.randomseed( tonumber(tostring(os.time()):reverse():sub(1,6)) )
 	Setup()
 end
 
@@ -85,6 +86,9 @@ local titlemusic = Music("music/title.ogg")
 local foresta = Music("music/foresta.ogg")
 local forestb = Music("music/forestb.ogg")
 local forestc = Music("music/forestc.ogg")
+foresta:setLooping(true)
+forestb:setLooping(true)
+forestc:setLooping(true)
 
 local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
@@ -314,8 +318,11 @@ function game_update(dt)
 				enemytype = 3
 			elseif leveltype == " " then
 				enemytype = 4
-			else
+			elseif leveltype == "r" then
 				enemytype = math.random(3)
+			else
+				print("Unknown level character " .. leveltype)
+				enemytype = 1
 			end
 		end
 		
@@ -341,7 +348,7 @@ function game_update(dt)
 		currentactionkey = SLIDEKEY
 	elseif enemytype == 3 then
 		currentactionkey = SWORDKEY
-	elseif enemytype == 3 then
+	elseif enemytype == 4 then
 		currentactionkey = JUMPKEY
 	else
 		currentactionkey = "a"
