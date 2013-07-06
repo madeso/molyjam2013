@@ -82,7 +82,6 @@ forestc:setLooping(true)
 local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
 
-local test = Sfx("test.ogg")
 local sfxhurt = Sfx("sfx/Hurt.ogg")
 local sfxjump = Sfx("sfx/jump.ogg")
 local sfxslash = Sfx("sfx/slash.ogg")
