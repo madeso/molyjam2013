@@ -1,3 +1,5 @@
+JUMPKEY = " "
+
 function Img(p)
 	local r
 	r = love.graphics.newImage(p)
@@ -54,6 +56,8 @@ local PauseAllAudio = love.audio.pause
 -- Sounds
 local titlemusic = Music("title.ogg")
 local foresta = Music("foresta.ogg")
+local forestb = Music("forestb.ogg")
+local forestc = Music("forestc.ogg")
 local test = Sfx("test.ogg")
 
 -- Graphics
@@ -87,53 +91,101 @@ function Stone()
 	s.pos = 600
 	return s
 end
+
 local stones = {}
-local jumptimer = -1
+local jumptimer = 0
+local isjumping = false
 local gametimer = 0
 
 local currentxp = 0
+local collided = false
 local currentlevel = 1
 
 function game_draw()
 	local jumpheight = 0
-	if jumptimer > 0 then
-		jumpheight = 210*math.sin(3.14*jumptimer)
+	if isjumping then
+		jumpheight = 210 -- *math.sin(3.14*jumptimer)
 	else
 		jumpheight = 0
 	end
     Draw(gamebkg, 0,0)
 	Draw(player, 72,300 - jumpheight)
+	
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
 	local stonepos = 0
-	stonepos = from01(-256, wrap01(gametimer - 0.8), 800)
-	Draw(stone, stonepos,340)
+	-- 0.68 = player placing
+	stonepos = from01(-256, wrap01(gametimer-0.38), 800)
+	Draw(stone, stonepos, 340)
 	
+	local col = false
+	if jumpheight < 60 and stonepos > -1 and stonepos < 160 then
+		col = true
+	else
+		col = false
+	end
+	
+	if col then
+		love.graphics.print("Collision!", 400, 300)
+		if collided == false then
+			collided = true
+			Play(test)
+		end
+	end
+	
+	-- hud
 	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel, 0, 0, 780, "right")
 end
 function game_onkey(key)
-	if key == " " then
-		if jumptimer < 0 then
-			jumptimer = 1
-		end
-	end
 end
 function game_update(dt)
-	gametimer = gametimer - dt / 2
+	gametimer = gametimer - dt * (90/60)
 	if gametimer < 0 then
 		gametimer = gametimer + 1
-		Play(test)
+		if collided == false then
+			currentxp = currentxp + 1
+			if currentxp >= 20 then
+				currentxp = 0
+				currentlevel = currentlevel + 1
+				levelmusic()
+			end
+		end
+		collided = false
 	end
 	
-	if jumptimer > 0 then
-		jumptimer = jumptimer - dt*2
+	if love.keyboard.isDown(JUMPKEY) then
+		if jumptimer < 0.2 then
+			jumptimer = jumptimer + dt
+			isjumping = true
+		else
+			isjumping = false
+		end
 	else
-		jumptimer = -1
+		isjumping = false
+		jumptimer = 0
 	end
 end
 function game_setup()
 	Play(foresta)
+	Play(forestb)
+	Play(forestc)
+	foresta:setVolume(0)
+	forestb:setVolume(0)
+	forestc:setVolume(0)
+	levelmusic()
 end
-
+function levelmusic()
+	foresta:setVolume(0)
+	forestb:setVolume(0)
+	forestc:setVolume(0)
+	
+	if currentlevel == 1 then
+		foresta:setVolume(1)
+	elseif currentlevel == 2 then
+		forestb:setVolume(1)
+	else
+		forestc:setVolume(1)
+	end
+end
 
 
 
