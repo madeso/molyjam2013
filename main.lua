@@ -97,14 +97,14 @@ end
 
 -----------------------------------------------------------------------------------------
 
-function Stone()
+function Enemy()
 	local s
 	s = {}
 	s.pos = 600
 	return s
 end
 
-local stones = {}
+local enemies = {}
 local jumptimer = 0
 local isjumping = false
 local gametimer = 1
@@ -117,12 +117,12 @@ local jumpedstone = false
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
-	local stonepos = 0
+	local enemypos = 0
 	-- 0.68 = player placing
 	-- was wrap01(gametimer-0.38)
-	stonepos = from01(-256, gametimer, 800)
+	enemypos = from01(-256, gametimer, 800)
 	local col = false
-	if stonepos > -1 and stonepos < 160 then
+	if enemypos > -1 and enemypos < 160 then
 		col = true
 	else
 		col = false
@@ -141,21 +141,21 @@ function game_logic()
 		jumpheight = 0
 	end
 	
-	return jumpheight,stonepos,col,dojump
+	return jumpheight,enemypos,col,dojump
 end
 
 function game_draw()
-	local jumpheight,stonepos,col,dojump = game_logic()
+	local jumpheight,enemypos,col,dojump = game_logic()
 	Draw(gamebkg, 0,0)
 	
 	if enemytype == 1 then
-		Draw(stone, stonepos, 340)
+		Draw(stone, enemypos, 340)
 	elseif enemytype == 2 then
-		Draw(tree, stonepos, 250)
+		Draw(tree, enemypos, 250)
 	elseif enemytype == 3 then
-		Draw(goblin, stonepos, 300)
+		Draw(goblin, enemypos, 300)
 	else
-		love.graphics.print("Unknown enemytype" .. enemytype, stonepos, 340)
+		love.graphics.print("Unknown enemytype" .. enemytype, enemypos, 340)
 	end
 	
 	if enemytype == 1 then
