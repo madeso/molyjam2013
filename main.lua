@@ -1,5 +1,6 @@
 JUMPKEY = " "
 SLIDEKEY = "down"
+SWORDKEY = "right"
 
 INFOX = 300
 INFOY = 300
@@ -70,7 +71,9 @@ local test = Sfx("test.ogg")
 local title = Img("title.png")
 local gamebkg = Img("world.png")
 local player = Img("player.png")
+local goblin = Img("goblin.png")
 local playerslide = Img("playersliding.png")
+local playerattack = Img("playerattack.png")
 local stone = Img("stone.png")
 local tree = Img("tree.png")
 
@@ -149,6 +152,8 @@ function game_draw()
 		Draw(stone, stonepos, 340)
 	elseif enemytype == 2 then
 		Draw(tree, stonepos, 250)
+	elseif enemytype == 3 then
+		Draw(goblin, stonepos, 300)
 	else
 		love.graphics.print("Unknown enemytype" .. enemytype, stonepos, 340)
 	end
@@ -158,6 +163,12 @@ function game_draw()
 	elseif enemytype == 2 then
 		if dojump then
 			Draw(playerslide, 72,300)
+		else
+			Draw(player, 72,300)
+		end
+	elseif enemytype == 3 then
+		if dojump then
+			Draw(playerattack, 72,300)
 		else
 			Draw(player, 72,300)
 		end
@@ -195,10 +206,10 @@ end
 function game_onkey(key)
 end
 function game_update(dt)
-	gametimer = gametimer - dt * (90/60)
+	gametimer = gametimer - dt * (90/60)/2
 	if gametimer < 0 then
 		gametimer = gametimer + 1
-		enemytype = math.random(2)
+		enemytype = math.random(3)
 		if collided == false then
 			currentxp = currentxp + 1
 			if currentxp >= 20 then
@@ -217,6 +228,8 @@ function game_update(dt)
 		currentactionkey = JUMPKEY
 	elseif enemytype == 2 then
 		currentactionkey = SLIDEKEY
+	elseif enemytype == 3 then
+		currentactionkey = SWORDKEY
 	else
 		currentactionkey = "a"
 		print("Unknown enemytype " .. enemytype)
