@@ -14,6 +14,10 @@ INFOY = 300
 -- Aliases
 local Draw = love.graphics.draw
 local PauseAllAudio = love.audio.pause
+function Playx(x)
+	x:rewind()
+	love.audio.play(x)
+end
 local Play = love.audio.play
 
 function Img(p)
@@ -110,7 +114,7 @@ end
 function title_update(dt)
 end
 function title_setup()
-	Play(titlemusic)
+	Playx(titlemusic)
 end
 
 -----------------------------------------------------------------------------------------
@@ -125,7 +129,7 @@ end
 function win_update(dt)
 end
 function win_setup()
-	Play(winmusic)
+	Playx(winmusic)
 end
 
 -----------------------------------------------------------------------------------------
@@ -140,7 +144,7 @@ end
 function fail_update(dt)
 end
 function fail_setup()
-	Play(failmusic)
+	Playx(failmusic)
 end
 
 
@@ -327,9 +331,20 @@ function game_update(dt)
 	end
 end
 function game_setup()
-	Play(foresta)
-	Play(forestb)
-	Play(forestc)
+	leveldata = FORESTDATA
+	levelindex = 1
+	jumptimer = 0
+	isjumping = false
+	gametimer = 0
+	enemytype = 1
+	currentxp = 0
+	collided = false
+	currentlevel = 1
+	jumpedstone = false
+
+	Playx(foresta)
+	Playx(forestb)
+	Playx(forestc)
 	foresta:setVolume(0)
 	forestb:setVolume(0)
 	forestc:setVolume(0)
