@@ -83,9 +83,9 @@ local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
 
 local sfxhurt = Sfx("sfx/Hurt.ogg")
-local sfxjump = Sfx("sfx/jump.ogg")
-local sfxslash = Sfx("sfx/slash.ogg")
-local sfxslide = Sfx("sfx/slide.ogg")
+local sfxjump = Sfx("sfx/Jump.ogg")
+local sfxslash = Sfx("sfx/Slash.ogg")
+local sfxslide = Sfx("sfx/Slide.ogg")
 
 -- Graphics
 local title = Img("gfx/title.png")
