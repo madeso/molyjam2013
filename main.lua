@@ -1,5 +1,10 @@
 require("data")
 
+STATEMENU = 0
+STATEGAME = 1
+STATEWIN = 2
+STATEFAIL = 3
+
 -- Aliases
 local Draw = love.graphics.draw
 local PauseAllAudio = love.audio.pause
