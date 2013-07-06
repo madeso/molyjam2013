@@ -40,7 +40,7 @@ end
 
 -----------------------------------------------------------------------------------------
 -- Startup
-local state = 1
+local state = 0
 
 function love.load()
 	love.graphics.setFont(love.graphics.newFont("AlexBrush-Regular-OTF.otf", 30))
@@ -71,6 +71,7 @@ function title_onkey(key)
 	if key == " " then
 		PauseAllAudio()
 		state = 1
+		Setup()
 	end
 end
 function title_draw()
@@ -192,7 +193,7 @@ end
 -----------------------------------------------------------------------------------------
 function Setup()
 	if state == 0 then
-		tile_setup()
+		title_setup()
 	elseif state == 1 then
 		game_setup()
 	else
