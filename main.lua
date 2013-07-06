@@ -2,11 +2,16 @@ JUMPKEY = " "
 SLIDEKEY = "down"
 SWORDKEY = "right"
 FORESTDATA = "---ooo888"
+GODMODE = false
 
 STATEMENU = 0
 STATEGAME = 1
 STATEWIN = 2
 STATEFAIL = 3
+MAXHEALTH = 3
+SPACEBETWEENHEARTS = 18
+HEARTX = 5
+HEARTY = 5
 
 INFOX = 300
 INFOY = 300
@@ -101,6 +106,7 @@ local playerslide = Img("playersliding.png")
 local playerattack = Img("playerattack.png")
 local stone = Img("stone.png")
 local tree = Img("tree.png")
+local heartgfx = Img("heart.png")
 
 -----------------------------------------------------------------------------------------
 function title_onkey(key)
@@ -169,6 +175,7 @@ local currentxp = 0
 local collided = false
 local currentlevel = 1
 local jumpedstone = false
+local health = MAXHEALTH
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -245,6 +252,13 @@ function game_draw()
 				if collided == false then
 					collided = true
 					Play(sfxhurt)
+					
+					if GODMODE == false then
+						health = health - 1
+						if health == 0 then
+							SetState(STATEFAIL)
+						end
+					end
 				end
 			end
 		else
@@ -267,6 +281,9 @@ function game_draw()
 	
 	-- hud
 	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. levelindex, 0, 0, 780, "right")
+	for i=1,health do
+		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
+	end
 end
 function game_onkey(key)
 end
@@ -341,6 +358,7 @@ function game_setup()
 	collided = false
 	currentlevel = 1
 	jumpedstone = false
+	health = MAXHEALTH
 
 	Playx(foresta)
 	Playx(forestb)
