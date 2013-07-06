@@ -1,7 +1,7 @@
 JUMPKEY = " "
 SLIDEKEY = "down"
 SWORDKEY = "right"
-FORESTDATA = "---ooo888"
+FORESTDATA = "- - - o o o 8 8 8"
 GODMODE = false
 
 STATEMENU = 0
@@ -216,6 +216,8 @@ function game_draw()
 		Draw(tree, enemypos, 250)
 	elseif enemytype == 3 then
 		Draw(goblin, enemypos, 300)
+	elseif enemytype == 4 then
+		-- no enemy here
 	else
 		love.graphics.print("Unknown enemytype" .. enemytype, enemypos, 340)
 	end
@@ -234,6 +236,9 @@ function game_draw()
 		else
 			Draw(player, 72,300)
 		end
+	elseif enemytype == 4 then
+		-- no enemy here
+		Draw(player, 72,300 - jumpheight)
 	else
 		love.graphics.print("Unknown enemytype" .. enemytype, 72, 300)
 	end
@@ -250,13 +255,15 @@ function game_draw()
 		if jumpheight < 60 then
 			if jumpedstone==false then
 				if collided == false then
-					collided = true
-					Play(sfxhurt)
-					
-					if GODMODE == false then
-						health = health - 1
-						if health == 0 then
-							SetState(STATEFAIL)
+					if enemytype ~= 4 then
+						collided = true
+						Play(sfxhurt)
+						
+						if GODMODE == false then
+							health = health - 1
+							if health == 0 then
+								SetState(STATEFAIL)
+							end
 						end
 					end
 				end
@@ -272,6 +279,8 @@ function game_draw()
 					Play(sfxslide)
 				elseif enemytype == 3 then
 					Play(sfxslash)
+				elseif enemytype == 4 then
+					Play(sfxjump)
 				else
 					print("Unknown enemytype" .. enemytype)
 				end
@@ -303,6 +312,8 @@ function game_update(dt)
 				enemytype = 1
 			elseif leveltype == "8" then
 				enemytype = 3
+			elseif leveltype == " " then
+				enemytype = 4
 			else
 				enemytype = math.random(3)
 			end
@@ -330,6 +341,8 @@ function game_update(dt)
 		currentactionkey = SLIDEKEY
 	elseif enemytype == 3 then
 		currentactionkey = SWORDKEY
+	elseif enemytype == 3 then
+		currentactionkey = JUMPKEY
 	else
 		currentactionkey = "a"
 		print("Unknown enemytype " .. enemytype)
