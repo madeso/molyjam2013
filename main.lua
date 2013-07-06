@@ -1,4 +1,5 @@
 JUMPKEY = " "
+SLIDEKEY = "down"
 
 function Img(p)
 	local r
@@ -171,7 +172,7 @@ function game_draw()
 				end
 			end
 		else
-			-- jumping over the sonte
+			-- jumping over the stone
 			jumpedstone = true
 		end
 	end
@@ -198,7 +199,18 @@ function game_update(dt)
 		jumpedstone = false
 	end
 	
-	if love.keyboard.isDown(JUMPKEY) then
+	local currentactionkey
+	
+	if enemytype == 1 then
+		currentactionkey = JUMPKEY
+	elseif enemytype == 2 then
+		currentactionkey = SLIDEKEY
+	else
+		currentactionkey = "a"
+		print("Unknown enemytype " .. enemytype)
+	end
+	
+	if love.keyboard.isDown(currentactionkey) then
 		if jumptimer < 0.2 then
 			jumptimer = jumptimer + dt
 			isjumping = true
