@@ -1,6 +1,9 @@
 JUMPKEY = " "
 SLIDEKEY = "down"
 
+INFOX = 300
+INFOY = 300
+
 function Img(p)
 	local r
 	r = love.graphics.newImage(p)
@@ -162,10 +165,17 @@ function game_draw()
 		love.graphics.print("Unknown enemytype" .. enemytype, 72, 300)
 	end
 	
+	if collided then
+		love.graphics.print("Bad!", INFOX, INFOY)
+	end
+	
+	if jumpedstone then
+		love.graphics.print("Good!", INFOX, INFOY)
+	end
+	
 	if col then
 		if jumpheight < 60 then
 			if jumpedstone==false then
-				love.graphics.print("Collision!", 400, 300)
 				if collided == false then
 					collided = true
 					Play(test)
@@ -173,7 +183,9 @@ function game_draw()
 			end
 		else
 			-- jumping over the stone
-			jumpedstone = true
+			if collided == false then
+				jumpedstone = true
+			end
 		end
 	end
 	
