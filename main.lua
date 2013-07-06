@@ -1,9 +1,20 @@
 JUMPKEY = " "
 SLIDEKEY = "down"
 SWORDKEY = "right"
+FORESTDATA = "---ooo888"
+
+STATEMENU = 0
+STATEGAME = 1
+STATEWIN = 2
+STATEFAIL = 3
 
 INFOX = 300
 INFOY = 300
+
+-- Aliases
+local Draw = love.graphics.draw
+local PauseAllAudio = love.audio.pause
+local Play = love.audio.play
 
 function Img(p)
 	local r
@@ -45,7 +56,13 @@ end
 
 -----------------------------------------------------------------------------------------
 -- Startup
-local state = 0
+local state = STATEMENU
+
+function SetState(x)
+	PauseAllAudio()
+	state = x
+	Setup()
+end
 
 function love.load()
 	love.graphics.setFont(love.graphics.newFont("AlexBrush-Regular-OTF.otf", 30))
@@ -53,18 +70,16 @@ function love.load()
 end
 
 -----------------------------------------------------------------------------------------
--- Aliases
-local Draw = love.graphics.draw
-local PauseAllAudio = love.audio.pause
-local Play = love.audio.play
---function Play(x)
---end
 
 -- Sounds
 local titlemusic = Music("music/title.ogg")
 local foresta = Music("music/foresta.ogg")
 local forestb = Music("music/forestb.ogg")
 local forestc = Music("music/forestc.ogg")
+
+local failmusic = Music("music/defeat.ogg")
+local winmusic = Music("music/victory.ogg")
+
 local test = Sfx("test.ogg")
 local sfxhurt = Sfx("sfx/Hurt.ogg")
 local sfxjump = Sfx("sfx/jump.ogg")
@@ -73,6 +88,8 @@ local sfxslide = Sfx("sfx/slide.ogg")
 
 -- Graphics
 local title = Img("title.png")
+local winbg = Img("win.png")
+local failbg = Img("fail.png")
 local gamebkg = Img("world.png")
 local player = Img("player.png")
 local goblin = Img("goblin.png")
@@ -84,9 +101,7 @@ local tree = Img("tree.png")
 -----------------------------------------------------------------------------------------
 function title_onkey(key)
 	if key == " " then
-		PauseAllAudio()
-		state = 1
-		Setup()
+		SetState(STATEGAME)
 	end
 end
 function title_draw()
@@ -98,6 +113,36 @@ function title_setup()
 	Play(titlemusic)
 end
 
+-----------------------------------------------------------------------------------------
+function win_onkey(key)
+	if key == " " then
+		SetState(STATEMENU)
+	end
+end
+function win_draw()
+	Draw(winbg, 0,0)
+end
+function win_update(dt)
+end
+function win_setup()
+	Play(winmusic)
+end
+
+-----------------------------------------------------------------------------------------
+function fail_onkey(key)
+	if key == " " then
+		SetState(STATEMENU)
+	end
+end
+function fail_draw()
+	Draw(failbg, 0,0)
+end
+function fail_update(dt)
+end
+function fail_setup()
+	Play(failmusic)
+end
+
 
 -----------------------------------------------------------------------------------------
 
@@ -107,11 +152,13 @@ function Enemy()
 	s.pos = 600
 	return s
 end
-
 local enemies = {}
+
+local leveldata = FORESTDATA
+local levelindex = 1
 local jumptimer = 0
 local isjumping = false
-local gametimer = 1
+local gametimer = 0
 local enemytype = 1
 
 local currentxp = 0
@@ -215,7 +262,7 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. enemytype, 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. levelindex, 0, 0, 780, "right")
 end
 function game_onkey(key)
 end
@@ -223,7 +270,25 @@ function game_update(dt)
 	gametimer = gametimer - dt * (90/60)/2
 	if gametimer < 0 then
 		gametimer = gametimer + 1
-		enemytype = math.random(3)
+		local leveltype
+		if levelindex > leveldata:len() then
+			enemytype = 4
+			SetState(STATEWIN)
+		else
+			leveltype = string.sub(leveldata, levelindex,levelindex)
+			if leveltype == "-" then
+				enemytype = 2
+			elseif leveltype == "o" then
+				enemytype = 1
+			elseif leveltype == "8" then
+				enemytype = 3
+			else
+				enemytype = math.random(3)
+			end
+		end
+		
+		levelindex = levelindex + 1
+		
 		if collided == false then
 			currentxp = currentxp + 1
 			if currentxp >= 20 then
@@ -288,38 +353,44 @@ end
 
 -----------------------------------------------------------------------------------------
 function Setup()
-	if state == 0 then
-		title_setup()
-	elseif state == 1 then
-		game_setup()
+	if state == STATEMENU then title_setup()
+	elseif state == STATEGAME then game_setup()
+	elseif state == STATEWIN then win_setup()
+	elseif state == STATEFAIL then fail_setup()
 	else
 		print("unknown gamestate " .. state)
 	end
 end
 
 function love.draw()
-	if state == 0 then title_draw()
-	elseif state == 1 then game_draw()
+	if state == STATEMENU then title_draw()
+	elseif state == STATEGAME then game_draw()
+	elseif state == STATEWIN then win_draw()
+	elseif state == STATEFAIL then fail_draw()
 	else
 		love.graphics.print("unknown gamestate " .. state, 400, 300)
 	end
 end
 
 function love.keyreleased(key)
-   if key == "escape" then
-      love.event.push("quit")   -- actually causes the app to quit
-   end
-   
-   if state == 0 then title_onkey(key)
-	elseif state == 1 then game_onkey(key)
+	if key == "escape" then
+		love.event.push("quit")   -- actually causes the app to quit
+	end
+	
+	if state == STATEMENU then title_onkey(key)
+	elseif state == STATEGAME then game_onkey(key)
+	elseif state == STATEWIN then win_onkey(key)
+	elseif state == STATEFAIL then fail_onkey(key)
 	else
 		print("unknown gamestate " .. state)
 	end
 end
 
 function love.update(dt)
-   if state == 0 then title_update(dt)
-	elseif state == 1 then game_update(dt)
+	if state == STATEMENU then title_update(dt)
+	elseif state == STATEGAME then game_update(dt)
+	elseif state == STATEWIN then win_update(dt)
+	elseif state == STATEFAIL then fail_update(dt)
 	else
 		print("unknown gamestate " .. state)
 	end
