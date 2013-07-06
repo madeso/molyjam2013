@@ -66,6 +66,7 @@ local test = Sfx("test.ogg")
 local title = Img("title.png")
 local gamebkg = Img("world.png")
 local player = Img("player.png")
+local playerslide = Img("playersliding.png")
 local stone = Img("stone.png")
 local tree = Img("tree.png")
 
@@ -133,11 +134,11 @@ function game_logic()
 		jumpheight = 0
 	end
 	
-	return jumpheight,stonepos,col
+	return jumpheight,stonepos,col,dojump
 end
 
 function game_draw()
-	local jumpheight,stonepos,col = game_logic()
+	local jumpheight,stonepos,col,dojump = game_logic()
 	Draw(gamebkg, 0,0)
 	
 	if enemytype == 1 then
@@ -148,7 +149,17 @@ function game_draw()
 		love.graphics.print("Unknown enemytype" .. enemytype, stonepos, 340)
 	end
 	
-	Draw(player, 72,300 - jumpheight)
+	if enemytype == 1 then
+		Draw(player, 72,300 - jumpheight)
+	elseif enemytype == 2 then
+		if dojump then
+			Draw(playerslide, 72,300)
+		else
+			Draw(player, 72,300)
+		end
+	else
+		love.graphics.print("Unknown enemytype" .. enemytype, 72, 300)
+	end
 	
 	if col then
 		if jumpheight < 60 then
@@ -198,8 +209,6 @@ function game_update(dt)
 		isjumping = false
 		jumptimer = 0
 	end
-	
-	local jumpheight,stonepos,col = game_logic()
 end
 function game_setup()
 	Play(foresta)
