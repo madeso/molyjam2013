@@ -61,11 +61,15 @@ local Play = love.audio.play
 --end
 
 -- Sounds
-local titlemusic = Music("title.ogg")
-local foresta = Music("foresta.ogg")
-local forestb = Music("forestb.ogg")
-local forestc = Music("forestc.ogg")
+local titlemusic = Music("music/title.ogg")
+local foresta = Music("music/foresta.ogg")
+local forestb = Music("music/forestb.ogg")
+local forestc = Music("music/forestc.ogg")
 local test = Sfx("test.ogg")
+local sfxhurt = Sfx("sfx/Hurt.ogg")
+local sfxjump = Sfx("sfx/jump.ogg")
+local sfxslash = Sfx("sfx/slash.ogg")
+local sfxslide = Sfx("sfx/slide.ogg")
 
 -- Graphics
 local title = Img("title.png")
@@ -189,13 +193,23 @@ function game_draw()
 			if jumpedstone==false then
 				if collided == false then
 					collided = true
-					Play(test)
+					Play(sfxhurt)
 				end
 			end
 		else
 			-- jumping over the stone
 			if collided == false then
 				jumpedstone = true
+				
+				if enemytype == 1 then
+					Play(sfxjump)
+				elseif enemytype == 2 then
+					Play(sfxslide)
+				elseif enemytype == 3 then
+					Play(sfxslash)
+				else
+					print("Unknown enemytype" .. enemytype)
+				end
 			end
 		end
 	end
