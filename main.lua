@@ -128,6 +128,7 @@ local gamebkg = Img("gfx/world.png")
 local player = Img("gfx/knight/run0.png")
 local goblin = Img("gfx/goblin/idle.png")
 local playerslide = Img("gfx/knight/slide0.png")
+local playerjump = Img("gfx/knight/jump0.png")
 local playerattack = Img("gfx/knight/attack6.png")
 local stone = Img("gfx/stone.png")
 local tree = Img("gfx/tree.png")
@@ -296,7 +297,11 @@ function game_draw()
 	end
 	
 	if actiontype == 1 then
-		Draw(player, 72,300 - jumpheight)
+		if jumpheight > 10 then
+			Draw(playerjump, 72,300 - jumpheight)
+		else
+			Draw(player, 72,300 - jumpheight)
+		end
 	elseif actiontype == 2 then
 		if dojump then
 			Draw(playerslide, 72,300)
