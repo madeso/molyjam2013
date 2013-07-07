@@ -10,7 +10,7 @@ Created by:
 For the specific details, please read the full license in the licenses folder, but for the lazy this is the general gist:
 * Art(cc) & code(gpl) by Gustav Jansson
 * Music(used with permission) & Sounds(used with permission) by Robbie Dooley
-* Public font, Alex-brush(OFL) by Rosette http://openfontlibrary.org/en/font/alex-brush
+* Public font, PressStart2P(OFL) by Cody \'CodeMan38\' Boisclair http://openfontlibrary.org/en/font/press-start-2p
 
 Various screens:
 =================

@@ -80,7 +80,7 @@ function SetState(x)
 end
 
 function love.load()
-	love.graphics.setFont(love.graphics.newFont("AlexBrush-Regular-OTF.otf", 30))
+	love.graphics.setFont(love.graphics.newFont("PressStart2P.ttf", 30))
 	math.randomseed( tonumber(tostring(os.time()):reverse():sub(1,6)) )
 	Setup()
 end
@@ -121,7 +121,9 @@ local sfxslide = Sfx("sfx/Slide.ogg")
 
 -- Graphics
 local title = Img("gfx/title.png")
-local statbg = Img("gfx/stats.png")
+local cavestatbg = Img("gfx/stats/cave.png")
+local foreststatbg = Img("gfx/stats/forest.png")
+local hauntedstatbg = Img("gfx/stats/haunted.png")
 local winbg = Img("gfx/win.png")
 local failbg = Img("gfx/fail.png")
 local forestbg = Img("gfx/world/forest.png")
@@ -532,6 +534,7 @@ function levelmusic()
 end
 
 -----------------------------------------------------------------------------------------
+local statbg = foreststatbg
 function stat_onkey(key)
 	if key == " " then
 		worldindex = worldindex + 1
@@ -556,6 +559,13 @@ end
 function stat_update(dt)
 end
 function stat_setup()
+	if worldindex == 1 then
+		statbg = foreststatbg
+	elseif worldindex == 2 then
+		statbg = cavestatbg
+	else
+		statbg = hauntedstatbg
+	end
 	Playx(statmusic)
 end
 
