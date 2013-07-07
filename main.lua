@@ -4,6 +4,7 @@ STATEMENU = 0
 STATEGAME = 1
 STATEWIN = 2
 STATEFAIL = 3
+STATESTAT = 4
 
 -- Aliases
 local Draw = love.graphics.draw
@@ -81,6 +82,7 @@ forestc:setLooping(true)
 
 local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
+local statmusic = winmusic -- might be updated later on, dunno
 
 local sfxhurt = Sfx("sfx/Hurt.ogg")
 local sfxjump = Sfx("sfx/Jump.ogg")
@@ -89,6 +91,7 @@ local sfxslide = Sfx("sfx/Slide.ogg")
 
 -- Graphics
 local title = Img("gfx/title.png")
+local statbg = Img("gfx/stats.png")
 local winbg = Img("gfx/win.png")
 local failbg = Img("gfx/fail.png")
 local gamebkg = Img("gfx/world.png")
@@ -100,9 +103,12 @@ local stone = Img("gfx/stone.png")
 local tree = Img("gfx/tree.png")
 local heartgfx = Img("gfx/heart.png")
 
+local worldindex = 1
+
 -----------------------------------------------------------------------------------------
 function title_onkey(key)
 	if key == " " then
+		worldindex = 1
 		SetState(STATEGAME)
 	end
 end
@@ -162,6 +168,10 @@ local jumptimer = 0
 local isjumping = false
 local gametimer = 0
 local enemytype = 1
+
+local levelmusica
+local levelmusicb
+local levelmusicc
 
 local currentxp = 0
 local collided = false
@@ -281,7 +291,7 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. levelindex, 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. worldindex, 0, 0, 780, "right")
 	for i=1,health do
 		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
 	end
@@ -295,7 +305,11 @@ function game_update(dt)
 		local leveltype
 		if levelindex > leveldata:len() then
 			enemytype = 4
-			SetState(STATEWIN)
+			if worldindex == 3 then
+				SetState(STATEWIN)
+			else
+				SetState(STATESTAT)
+			end
 		else
 			leveltype = string.sub(leveldata, levelindex,levelindex)
 			if leveltype == "-" then
@@ -356,7 +370,12 @@ function game_update(dt)
 	end
 end
 function game_setup()
+	-- someone smart might place this into a array, but meh... who got the time anyway
 	leveldata = FORESTDATA
+	levelmusica = foresta
+	levelmusicb = forestb
+	levelmusicc = forestc
+	
 	levelindex = 1
 	jumptimer = 0
 	isjumping = false
@@ -368,29 +387,43 @@ function game_setup()
 	jumpedstone = false
 	health = MAXHEALTH
 
-	Playx(foresta)
-	Playx(forestb)
-	Playx(forestc)
-	foresta:setVolume(0)
-	forestb:setVolume(0)
-	forestc:setVolume(0)
+	Playx(levelmusica)
+	Playx(levelmusicb)
+	Playx(levelmusicc)
+	levelmusica:setVolume(0)
+	levelmusicb:setVolume(0)
+	levelmusicc:setVolume(0)
 	levelmusic()
 end
 function levelmusic()
-	foresta:setVolume(0)
-	forestb:setVolume(0)
-	forestc:setVolume(0)
+	levelmusica:setVolume(0)
+	levelmusicb:setVolume(0)
+	levelmusicc:setVolume(0)
 	
 	if currentlevel == 1 then
-		foresta:setVolume(1)
+		levelmusica:setVolume(1)
 	elseif currentlevel == 2 then
-		forestb:setVolume(1)
+		levelmusicb:setVolume(1)
 	else
-		forestc:setVolume(1)
+		levelmusicc:setVolume(1)
 	end
 end
 
-
+-----------------------------------------------------------------------------------------
+function stat_onkey(key)
+	if key == " " then
+		SetState(STATEGAME)
+		worldindex = worldindex + 1
+	end
+end
+function stat_draw()
+	Draw(statbg, 0,0)
+end
+function stat_update(dt)
+end
+function stat_setup()
+	Playx(statmusic)
+end
 
 -----------------------------------------------------------------------------------------
 function Setup()
@@ -398,6 +431,7 @@ function Setup()
 	elseif state == STATEGAME then game_setup()
 	elseif state == STATEWIN then win_setup()
 	elseif state == STATEFAIL then fail_setup()
+	elseif state == STATESTAT then stat_setup()
 	else
 		print("unknown gamestate " .. state)
 	end
@@ -408,6 +442,7 @@ function love.draw()
 	elseif state == STATEGAME then game_draw()
 	elseif state == STATEWIN then win_draw()
 	elseif state == STATEFAIL then fail_draw()
+	elseif state == STATESTAT then stat_draw()
 	else
 		love.graphics.print("unknown gamestate " .. state, 400, 300)
 	end
@@ -422,6 +457,7 @@ function love.keyreleased(key)
 	elseif state == STATEGAME then game_onkey(key)
 	elseif state == STATEWIN then win_onkey(key)
 	elseif state == STATEFAIL then fail_onkey(key)
+	elseif state == STATESTAT then stat_onkey(key)
 	else
 		print("unknown gamestate " .. state)
 	end
@@ -432,6 +468,7 @@ function love.update(dt)
 	elseif state == STATEGAME then game_update(dt)
 	elseif state == STATEWIN then win_update(dt)
 	elseif state == STATEFAIL then fail_update(dt)
+	elseif state == STATESTAT then stat_update(dt)
 	else
 		print("unknown gamestate " .. state)
 	end

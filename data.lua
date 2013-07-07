@@ -1,7 +1,7 @@
 JUMPKEY = "up"
 SLIDEKEY = "down"
 SWORDKEY = "right"
-FORESTDATA = " --- ooo 888 rrr "
+FORESTDATA = " ---ooo888"
 GODMODE = false
 MAXHEALTH = 3
 SPACEBETWEENHEARTS = 18
