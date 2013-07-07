@@ -8,7 +8,7 @@ A musicbased beatem up/fightingbased rythm game. You play a knight fighting mons
 Created by:
 =============
 * Art(cc) & code(gpl) by Gustav Jansson
-* Music & Sounds by Robbie Dooley
+* Music(custom) & Sounds(custom) by Robbie Dooley
 * Public font, Alex-brush(OFL) by Rosette http://openfontlibrary.org/en/font/alex-brush
 
 Design document that no longer applies
