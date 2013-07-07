@@ -136,7 +136,8 @@ local goblinhappy = Img("gfx/goblin/happy.png")
 local playerslide = Img("gfx/knight/slide0.png")
 local playerjump = Img("gfx/knight/jump0.png")
 local playerattack = Img("gfx/knight/attack6.png")
-local stone = Img("gfx/stone.png")
+local stone = Img("gfx/stone/normal.png")
+local stonebroken = Img("gfx/stone/broken.png")
 local cavetree = Img("gfx/tree/cave.png")
 local hauntedtree = Img("gfx/tree/haunted.png")
 local foresttree = Img("gfx/tree/forest.png")
@@ -306,7 +307,11 @@ function game_draw()
 	Draw(gamebkg, 0,0)
 	
 	if enemytype == 1 then
-		Draw(stone, enemypos, 370)
+		if collided then
+			Draw(stonebroken, enemypos, 370)
+		else
+			Draw(stone, enemypos, 370)
+		end
 	elseif enemytype == 2 then
 		Draw(tree, enemypos, 80)
 	elseif enemytype == 3 then
