@@ -289,11 +289,11 @@ function game_draw()
 	Draw(gamebkg, 0,0)
 	
 	if enemytype == 1 then
-		Draw(stone, enemypos, 340)
+		Draw(stone, enemypos, 370)
 	elseif enemytype == 2 then
-		Draw(tree, enemypos, 0)
+		Draw(tree, enemypos, 80)
 	elseif enemytype == 3 then
-		Draw(goblin, enemypos, 300)
+		Draw(goblin, enemypos, 350)
 	elseif enemytype == 4 then
 		-- no enemy here
 	else
@@ -302,25 +302,25 @@ function game_draw()
 	
 	if actiontype == 1 then
 		if jumpheight > 10 then
-			Draw(playerjump, 72,300 - jumpheight)
+			Draw(playerjump, 72,350 - jumpheight)
 		else
-			Draw(player, 72,300 - jumpheight)
+			Draw(player, 72,350 - jumpheight)
 		end
 	elseif actiontype == 2 then
 		if dojump then
-			Draw(playerslide, 72,300)
+			Draw(playerslide, 72,350)
 		else
-			Draw(player, 72,300)
+			Draw(player, 72,350)
 		end
 	elseif actiontype == 3 then
 		if dojump then
-			Draw(playerattack, 72,300)
+			Draw(playerattack, 72,350)
 		else
-			Draw(player, 72,300)
+			Draw(player, 72,350)
 		end
 	elseif actiontype == 4 then
 		-- no enemy here
-		Draw(player, 72,300 - jumpheight)
+		Draw(player, 72,350 - jumpheight)
 	else
 		love.graphics.print("Unknown actiontype" .. actiontype, 72, 300)
 	end
