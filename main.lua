@@ -193,6 +193,7 @@ local collided = false
 local currentlevel = 1
 local jumpedstone = false
 local health = MAXHEALTH
+local actionmade = false
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -286,21 +287,8 @@ function game_draw()
 				end
 			end
 		else
-			-- jumping over the stone
-			if collided == false then
+			if collided == false then -- jumping over the stone
 				jumpedstone = true
-				
-				if actiontype == 1 then
-					Play(sfxjump)
-				elseif actiontype == 2 then
-					Play(sfxslide)
-				elseif actiontype == 3 then
-					Play(sfxslash)
-				elseif actiontype == 4 then
-					Play(sfxjump)
-				else
-					print("Unknown actiontype" .. actiontype)
-				end
 			end
 		end
 	end
@@ -355,14 +343,39 @@ function game_update(dt)
 		end
 		collided = false
 		jumpedstone = false
+		actionmade = false
 	end
 	
-	actiontype = 0
-	handleActionType(dt, JUMPKEY, 1)
-	handleActionType(dt, SLIDEKEY, 2)
-	handleActionType(dt, SWORDKEY, 3)
+	if actionmade == false then
+		actiontype = 0
+		handleActionType(dt, JUMPKEY, 1)
+		handleActionType(dt, SLIDEKEY, 2)
+		handleActionType(dt, SWORDKEY, 3)
+	end
 	
-	if actiontype == 0 then
+	if actionmade == false and actiontype ~= 0 then
+		if actiontype == 1 then
+			Play(sfxjump)
+		elseif actiontype == 2 then
+			Play(sfxslide)
+		elseif actiontype == 3 then
+			Play(sfxslash)
+		elseif actiontype == 4 then
+			Play(sfxjump)
+		else
+			print("Unknown actiontype" .. actiontype)
+		end
+		actionmade = true
+	end
+	
+	if actiontype ~= 0 then
+		if jumptimer < 0.2 then
+			jumptimer = jumptimer + dt
+			isjumping = true
+		else
+			isjumping = false
+		end
+	else
 		actiontype = 1
 		isjumping = false
 		jumptimer = 0
@@ -372,12 +385,6 @@ end
 function handleActionType(dt, currentactionkey, t)
 	if love.keyboard.isDown(currentactionkey) then
 		actiontype = t
-		if jumptimer < 0.2 then
-			jumptimer = jumptimer + dt
-			isjumping = true
-		else
-			isjumping = false
-		end
 	end
 end
 
@@ -410,6 +417,7 @@ function game_setup()
 	currentlevel = 1
 	jumpedstone = false
 	health = MAXHEALTH
+	actionmade = false
 
 	Playx(levelmusica)
 	Playx(levelmusicb)
