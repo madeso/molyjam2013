@@ -129,11 +129,11 @@ local failbg = Img("gfx/fail.png")
 local forestbg = Img("gfx/world/forest.png")
 local cavebg = Img("gfx/world/cave.png")
 local hauntedbg = Img("gfx/world/haunted.png")
-local player = Img("gfx/knight/run0.png")
+local player = {Img("gfx/knight/run0.png"),Img("gfx/knight/run1.png"),Img("gfx/knight/run2.png")}
 local goblin = Img("gfx/goblin/idle.png")
 local goblindead = Img("gfx/goblin/dead.png")
 local goblinhappy = Img("gfx/goblin/happy.png")
-local playerslide = Img("gfx/knight/slide0.png")
+local playerslide = {Img("gfx/knight/slide0.png"), Img("gfx/knight/slide1.png")}
 local playerjump = Img("gfx/knight/jump0.png")
 local playerattack = Img("gfx/knight/attack6.png")
 local stone = Img("gfx/stone/normal.png")
@@ -277,6 +277,8 @@ local baselevel = 1
 
 local gamebkg = forestbg
 local tree = foresttree
+local animindex = 1
+local animtimer = 0
 local treebroken = foresttreebroken
 
 function game_logic()
@@ -306,6 +308,10 @@ function game_logic()
 	end
 	
 	return jumpheight,enemypos,col,dojump
+end
+
+function currentsprite(animlist)
+	return animlist[(animindex % #animlist)+1]
 end
 
 function game_draw()
@@ -344,23 +350,23 @@ function game_draw()
 		if jumpheight > 10 then
 			Draw(playerjump, 72,350 - jumpheight)
 		else
-			Draw(player, 72,350 - jumpheight)
+			Draw(currentsprite(player), 72,350 - jumpheight)
 		end
 	elseif actiontype == 2 then
 		if dojump then
-			Draw(playerslide, 72,350)
+			Draw(currentsprite(playerslide), 72,350)
 		else
-			Draw(player, 72,350)
+			Draw(currentsprite(player), 72,350)
 		end
 	elseif actiontype == 3 then
 		if dojump then
 			Draw(playerattack, 72,350)
 		else
-			Draw(player, 72,350)
+			Draw(currentsprite(player), 72,350)
 		end
 	elseif actiontype == 4 then
 		-- no enemy here
-		Draw(player, 72,350 - jumpheight)
+		Draw(currentsprite(player), 72,350 - jumpheight)
 	else
 		BeginPrint()
 		love.graphics.print("Unknown actiontype" .. actiontype, 72, 300)
@@ -428,6 +434,11 @@ end
 function game_onkey(key)
 end
 function game_update(dt)
+	animtimer = animtimer + dt
+	if animtimer > ANIMSPEED then
+		animindex = animindex + 1
+		animtimer = animtimer - ANIMSPEED
+	end
 	gametimer = gametimer - dt * (90/60)/2
 	if gametimer < 0 then
 		gametimer = gametimer + 1
