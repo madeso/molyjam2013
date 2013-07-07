@@ -425,7 +425,7 @@ function game_update(dt)
 		handleActionType(dt, SWORDKEY, 3)
 	end
 	
-	if actionmade == false and actiontype ~= 0 then
+	if actionmade == false and actiontype ~= 0 and jumptimer < REACTIONTIME then
 		if actiontype == 1 then
 			Play(sfxjump)
 		elseif actiontype == 2 then
@@ -446,6 +446,7 @@ function game_update(dt)
 			isjumping = true
 		else
 			isjumping = false
+			actionmade = false
 		end
 	else
 		actiontype = 1
