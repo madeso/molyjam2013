@@ -2,7 +2,7 @@ This is a entry for molyjam 2013: http://www.molyjam.com/
 
 sir Knightly Beats:
 ====================
-Oh noes! Just as you are about to marry the princess evil goblins kidnapped her and took her to the forbidden forest. Suit up in armor grab your trusty sword and hack those goblins away til kingdom come. Just make sure you don't run into stones or trees on the way to the castle, they hurt too!
+Oh noes! Just as you are about to marry the princess, evil goblins kidnapped her and took her to the forbidden forest! Suit up in armor, grab your trusty sword, and hack away at those goblins 'til kingdom come. Just make sure you don't run into any stones or trees along the way to the castle - they hurt too!
 
 Created by:
 =============
