@@ -72,7 +72,6 @@ end
 -----------------------------------------------------------------------------------------
 
 -- Sounds
-local titlemusic = Music("music/title.ogg")
 local foresta = Music("music/foresta.ogg")
 local forestb = Music("music/forestb.ogg")
 local forestc = Music("music/forestc.ogg")
@@ -80,6 +79,21 @@ foresta:setLooping(true)
 forestb:setLooping(true)
 forestc:setLooping(true)
 
+local cavea = Music("music/cavea.ogg")
+local caveb = Music("music/caveb.ogg")
+local cavec = Music("music/cavec.ogg")
+cavea:setLooping(true)
+caveb:setLooping(true)
+cavec:setLooping(true)
+
+local haunteda = Music("music/haunteda.ogg")
+local hauntedb = Music("music/hauntedb.ogg")
+local hauntedc = Music("music/hauntedc.ogg")
+haunteda:setLooping(true)
+hauntedb:setLooping(true)
+hauntedc:setLooping(true)
+
+local titlemusic = Music("music/title.ogg")
 local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
 local statmusic = winmusic -- might be updated later on, dunno
@@ -371,10 +385,22 @@ function game_update(dt)
 end
 function game_setup()
 	-- someone smart might place this into a array, but meh... who got the time anyway
-	leveldata = FORESTDATA
-	levelmusica = foresta
-	levelmusicb = forestb
-	levelmusicc = forestc
+	if worldindex == 1 then
+		leveldata = FORESTDATA
+		levelmusica = foresta
+		levelmusicb = forestb
+		levelmusicc = forestc
+	elseif worldindex == 2 then
+		leveldata = CAVEDATA
+		levelmusica = cavea
+		levelmusicb = caveb
+		levelmusicc = cavec
+	else
+		leveldata = HAUNTEDDATA
+		levelmusica = haunteda
+		levelmusicb = hauntedb
+		levelmusicc = hauntedc
+	end
 	
 	levelindex = 1
 	jumptimer = 0
@@ -412,8 +438,8 @@ end
 -----------------------------------------------------------------------------------------
 function stat_onkey(key)
 	if key == " " then
-		SetState(STATEGAME)
 		worldindex = worldindex + 1
+		SetState(STATEGAME)
 	end
 end
 function stat_draw()
