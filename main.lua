@@ -286,7 +286,7 @@ function game_draw()
 	if enemytype == 1 then
 		Draw(stone, enemypos, 340)
 	elseif enemytype == 2 then
-		Draw(tree, enemypos, 250)
+		Draw(tree, enemypos, 0)
 	elseif enemytype == 3 then
 		Draw(goblin, enemypos, 300)
 	elseif enemytype == 4 then
