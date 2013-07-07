@@ -124,7 +124,9 @@ local title = Img("gfx/title.png")
 local statbg = Img("gfx/stats.png")
 local winbg = Img("gfx/win.png")
 local failbg = Img("gfx/fail.png")
-local gamebkg = Img("gfx/world.png")
+local forestbg = Img("gfx/world/forest.png")
+local cavebg = Img("gfx/world/cave.png")
+local hauntedbg = Img("gfx/world/haunted.png")
 local player = Img("gfx/knight/run0.png")
 local goblin = Img("gfx/goblin/idle.png")
 local playerslide = Img("gfx/knight/slide0.png")
@@ -250,6 +252,8 @@ local health = MAXHEALTH
 local actionmade = false
 local gotacstat = false
 local baselevel = 1
+
+local gamebkg = forestbg
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -473,16 +477,19 @@ function game_setup()
 		levelmusica = foresta
 		levelmusicb = forestb
 		levelmusicc = forestc
+		gamebkg = forestbg
 	elseif worldindex == 2 then
 		leveldata = CAVEDATA
 		levelmusica = cavea
 		levelmusicb = caveb
 		levelmusicc = cavec
+		gamebkg = cavebg
 	else
 		leveldata = HAUNTEDDATA
 		levelmusica = haunteda
 		levelmusicb = hauntedb
 		levelmusicc = hauntedc
+		gamebkg = hauntedbg
 	end
 	
 	baselevel = currentlevel
