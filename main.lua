@@ -140,6 +140,8 @@ function title_onkey(key)
 	if key == " " then
 		worldindex = 1
 		ResetStats()
+		currentxp = 0
+		currentlevel = 1
 		SetState(STATEGAME)
 	end
 end
@@ -211,6 +213,7 @@ local currentlevel = 1
 local jumpedstone = false
 local health = MAXHEALTH
 local actionmade = false
+local gotacstat = false
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -286,6 +289,7 @@ function game_draw()
 		love.graphics.print("Good!", INFOX, INFOY)
 	end
 	
+	-- logic in draw function? - don't complain, this is a gamejam!
 	if col then
 		if jumpheight < 60 or enemytype~=actiontype then
 			if jumpedstone==false then
@@ -293,6 +297,7 @@ function game_draw()
 					if enemytype ~= 4 then
 						collided = true
 						Play(sfxhurt)
+						stats.damagetaken = stats.damagetaken + 1
 						
 						if GODMODE == false then
 							health = health - 1
@@ -310,8 +315,20 @@ function game_draw()
 		end
 	end
 	
+	if not collided and jumpedstone and gotacstat==false then
+		gotacstat = true
+		
+		if enemytype == 1 then
+			stats.stonesjumped = stats.stonesjumped + 1
+		elseif enemytype == 2 then
+			stats.branchesdodged = stats.branchesdodged + 1
+		elseif enemytype == 3 then
+			stats.monsterskilled = stats.monsterskilled + 1
+		end
+	end
+	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. worldindex, 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. tostring(not collided and jumpedstone), 0, 0, 780, "right")
 	for i=1,health do
 		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
 	end
@@ -325,11 +342,7 @@ function game_update(dt)
 		local leveltype
 		if levelindex > leveldata:len() then
 			enemytype = 4
-			if worldindex == 3 then
-				SetState(STATEWIN)
-			else
-				SetState(STATESTAT)
-			end
+			SetState(STATESTAT)
 		else
 			leveltype = string.sub(leveldata, levelindex,levelindex)
 			if leveltype == "-" then
@@ -352,15 +365,18 @@ function game_update(dt)
 		
 		if collided == false then
 			currentxp = currentxp + 1
+			stats.xpgained = stats.xpgained + 1
 			if currentxp >= 20 then
 				currentxp = 0
 				currentlevel = currentlevel + 1
+				stats.levelsgained = stats.levelsgained + 1
 				levelmusic()
 			end
 		end
 		collided = false
 		jumpedstone = false
 		actionmade = false
+		gotacstat = false
 	end
 	
 	if actionmade == false then
@@ -429,12 +445,11 @@ function game_setup()
 	isjumping = false
 	gametimer = 0
 	enemytype = 1
-	currentxp = 0
 	collided = false
-	currentlevel = 1
 	jumpedstone = false
 	health = MAXHEALTH
 	actionmade = false
+	gotacstat = false
 
 	Playx(levelmusica)
 	Playx(levelmusicb)
@@ -462,7 +477,11 @@ end
 function stat_onkey(key)
 	if key == " " then
 		worldindex = worldindex + 1
-		SetState(STATEGAME)
+		if worldindex == 4 then
+			SetState(STATEWIN)
+		else
+			SetState(STATEGAME)
+		end
 		ResetStats()
 	end
 end
