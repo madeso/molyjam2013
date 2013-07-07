@@ -182,6 +182,7 @@ local jumptimer = 0
 local isjumping = false
 local gametimer = 0
 local enemytype = 1
+local actiontype = 1
 
 local levelmusica
 local levelmusicb
@@ -238,25 +239,25 @@ function game_draw()
 		love.graphics.print("Unknown enemytype" .. enemytype, enemypos, 340)
 	end
 	
-	if enemytype == 1 then
+	if actiontype == 1 then
 		Draw(player, 72,300 - jumpheight)
-	elseif enemytype == 2 then
+	elseif actiontype == 2 then
 		if dojump then
 			Draw(playerslide, 72,300)
 		else
 			Draw(player, 72,300)
 		end
-	elseif enemytype == 3 then
+	elseif actiontype == 3 then
 		if dojump then
 			Draw(playerattack, 72,300)
 		else
 			Draw(player, 72,300)
 		end
-	elseif enemytype == 4 then
+	elseif actiontype == 4 then
 		-- no enemy here
 		Draw(player, 72,300 - jumpheight)
 	else
-		love.graphics.print("Unknown enemytype" .. enemytype, 72, 300)
+		love.graphics.print("Unknown actiontype" .. actiontype, 72, 300)
 	end
 	
 	if collided then
@@ -268,7 +269,7 @@ function game_draw()
 	end
 	
 	if col then
-		if jumpheight < 60 then
+		if jumpheight < 60 or enemytype~=actiontype then
 			if jumpedstone==false then
 				if collided == false then
 					if enemytype ~= 4 then
@@ -289,16 +290,16 @@ function game_draw()
 			if collided == false then
 				jumpedstone = true
 				
-				if enemytype == 1 then
+				if actiontype == 1 then
 					Play(sfxjump)
-				elseif enemytype == 2 then
+				elseif actiontype == 2 then
 					Play(sfxslide)
-				elseif enemytype == 3 then
+				elseif actiontype == 3 then
 					Play(sfxslash)
-				elseif enemytype == 4 then
+				elseif actiontype == 4 then
 					Play(sfxjump)
 				else
-					print("Unknown enemytype" .. enemytype)
+					print("Unknown actiontype" .. actiontype)
 				end
 			end
 		end
@@ -356,33 +357,30 @@ function game_update(dt)
 		jumpedstone = false
 	end
 	
-	local currentactionkey
+	actiontype = 0
+	handleActionType(dt, JUMPKEY, 1)
+	handleActionType(dt, SLIDEKEY, 2)
+	handleActionType(dt, SWORDKEY, 3)
 	
-	if enemytype == 1 then
-		currentactionkey = JUMPKEY
-	elseif enemytype == 2 then
-		currentactionkey = SLIDEKEY
-	elseif enemytype == 3 then
-		currentactionkey = SWORDKEY
-	elseif enemytype == 4 then
-		currentactionkey = JUMPKEY
-	else
-		currentactionkey = "a"
-		print("Unknown enemytype " .. enemytype)
+	if actiontype == 0 then
+		actiontype = 1
+		isjumping = false
+		jumptimer = 0
 	end
-	
+end
+
+function handleActionType(dt, currentactionkey, t)
 	if love.keyboard.isDown(currentactionkey) then
+		actiontype = t
 		if jumptimer < 0.2 then
 			jumptimer = jumptimer + dt
 			isjumping = true
 		else
 			isjumping = false
 		end
-	else
-		isjumping = false
-		jumptimer = 0
 	end
 end
+
 function game_setup()
 	-- someone smart might place this into a array, but meh... who got the time anyway
 	if worldindex == 1 then
