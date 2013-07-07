@@ -80,7 +80,7 @@ function SetState(x)
 end
 
 function love.load()
-	love.graphics.setFont(love.graphics.newFont("PressStart2P.ttf", 30))
+	love.graphics.setFont(love.graphics.newFont("PressStart2P.ttf", 20))
 	math.randomseed( tonumber(tostring(os.time()):reverse():sub(1,6)) )
 	Setup()
 end
@@ -142,6 +142,16 @@ local worldindex = 1
 
 local godmode = false
 local currentlevel = 1
+
+function BeginPrint()
+	if worldindex == 1 then
+		love.graphics.setColor(0, 0, 0)
+	end
+end
+
+function EndPrint()
+	love.graphics.setColor(255, 255, 255)
+end
 
 -----------------------------------------------------------------------------------------
 
@@ -299,7 +309,9 @@ function game_draw()
 	elseif enemytype == 4 then
 		-- no enemy here
 	else
+		BeginPrint()
 		love.graphics.print("Unknown enemytype" .. enemytype, enemypos, 340)
+		EndPrint()
 	end
 	
 	if actiontype == 1 then
@@ -324,15 +336,21 @@ function game_draw()
 		-- no enemy here
 		Draw(player, 72,350 - jumpheight)
 	else
+		BeginPrint()
 		love.graphics.print("Unknown actiontype" .. actiontype, 72, 300)
+		EndPrint()
 	end
 	
 	if collided then
+		BeginPrint()
 		love.graphics.print("Bad!", INFOX, INFOY)
+		EndPrint()
 	end
 	
 	if jumpedstone then
+		BeginPrint()
 		love.graphics.print("Good!", INFOX, INFOY)
+		EndPrint()
 	end
 	
 	-- logic in draw function? - don't complain, this is a gamejam!
@@ -374,7 +392,9 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel, 0, 0, 780, "right")
+	BeginPrint()
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel, 0, 20, 780, "right")
+	EndPrint()
 	for i=1,health do
 		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
 	end
@@ -549,12 +569,14 @@ end
 function stat_draw()
 	Draw(statbg, 0,0)
 	
+	BeginPrint()
 	Print("Experience gained: " .. stats.xpgained, STATX, STATY + STATDIFF*0)
 	Print("Levels gained: " .. stats.levelsgained, STATX, STATY + STATDIFF*1)
 	Print("Monsters killed: " .. stats.monsterskilled, STATX, STATY + STATDIFF*2)
 	Print("Branches dodged: " .. stats.branchesdodged, STATX, STATY + STATDIFF*3)
 	Print("Stones jumped: " .. stats.stonesjumped, STATX, STATY + STATDIFF*4)
 	Print("Damage taken: " .. stats.damagetaken, STATX, STATY + STATDIFF*5)
+	EndPrint()
 end
 function stat_update(dt)
 end
@@ -588,7 +610,9 @@ function love.draw()
 	elseif state == STATEFAIL then fail_draw()
 	elseif state == STATESTAT then stat_draw()
 	else
+		BeginPrint()
 		love.graphics.print("unknown gamestate " .. state, 400, 300)
+		EndPrint()
 	end
 end
 
