@@ -141,6 +141,11 @@ local stonebroken = Img("gfx/stone/broken.png")
 local cavetree = Img("gfx/tree/cave.png")
 local hauntedtree = Img("gfx/tree/haunted.png")
 local foresttree = Img("gfx/tree/forest.png")
+
+local cavetreebroken = Img("gfx/tree/cavebroken.png")
+local hauntedtreebroken = Img("gfx/tree/hauntedbroken.png")
+local foresttreebroken = Img("gfx/tree/forestbroken.png")
+
 local heartgfx = Img("gfx/heart.png")
 
 local worldindex = 1
@@ -272,6 +277,7 @@ local baselevel = 1
 
 local gamebkg = forestbg
 local tree = foresttree
+local treebroken = foresttreebroken
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -313,7 +319,11 @@ function game_draw()
 			Draw(stone, enemypos, 370)
 		end
 	elseif enemytype == 2 then
-		Draw(tree, enemypos, 80)
+		if collided then
+			Draw(treebroken, enemypos, 80)
+		else
+			Draw(tree, enemypos, 80)
+		end
 	elseif enemytype == 3 then
 		if collided then
 			Draw(goblinhappy, enemypos, 350)
@@ -517,6 +527,7 @@ function game_setup()
 		levelmusicc = forestc
 		gamebkg = forestbg
 		tree = foresttree
+		treebroken = foresttreebroken
 	elseif worldindex == 2 then
 		leveldata = CAVEDATA
 		levelmusica = cavea
@@ -524,6 +535,7 @@ function game_setup()
 		levelmusicc = cavec
 		gamebkg = cavebg
 		tree = cavetree
+		treebroken = cavetreebroken
 	else
 		leveldata = HAUNTEDDATA
 		levelmusica = haunteda
@@ -531,6 +543,7 @@ function game_setup()
 		levelmusicc = hauntedc
 		gamebkg = hauntedbg
 		tree = hauntedtree
+		treebroken = hauntedtreebroken
 	end
 	
 	baselevel = currentlevel
