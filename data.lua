@@ -10,6 +10,10 @@ SPACEBETWEENHEARTS = 18
 HEARTX = 5
 HEARTY = 5
 
+STATX = 100
+STATY = 150
+STATDIFF = 40
+
 -- possible change this depending on world
 REACTIONTIME = 0.2
 

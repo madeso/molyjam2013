@@ -9,6 +9,8 @@ STATESTAT = 4
 -- Aliases
 local Draw = love.graphics.draw
 local PauseAllAudio = love.audio.pause
+local Print = love.graphics.print
+
 function Playx(x)
 	x:rewind()
 	love.audio.play(x)
@@ -56,6 +58,20 @@ end
 -----------------------------------------------------------------------------------------
 -- Startup
 local state = STATEMENU
+
+local stats = {}
+
+function ResetStats()
+	stats.xpgained = 0
+	stats.levelsgained = 0
+	
+	stats.monsterskilled = 0
+	stats.branchesdodged = 0
+	stats.stonesjumped = 0
+	stats.damagetaken = 0
+end
+
+ResetStats()
 
 function SetState(x)
 	PauseAllAudio()
@@ -123,6 +139,7 @@ local worldindex = 1
 function title_onkey(key)
 	if key == " " then
 		worldindex = 1
+		ResetStats()
 		SetState(STATEGAME)
 	end
 end
@@ -446,10 +463,18 @@ function stat_onkey(key)
 	if key == " " then
 		worldindex = worldindex + 1
 		SetState(STATEGAME)
+		ResetStats()
 	end
 end
 function stat_draw()
 	Draw(statbg, 0,0)
+	
+	Print("Experience gained: " .. stats.xpgained, STATX, STATY + STATDIFF*0)
+	Print("Levels gained: " .. stats.levelsgained, STATX, STATY + STATDIFF*1)
+	Print("Monsters killed: " .. stats.monsterskilled, STATX, STATY + STATDIFF*2)
+	Print("Branches dodged: " .. stats.branchesdodged, STATX, STATY + STATDIFF*3)
+	Print("Stones jumped: " .. stats.stonesjumped, STATX, STATY + STATDIFF*4)
+	Print("Damage taken: " .. stats.damagetaken, STATX, STATY + STATDIFF*5)
 end
 function stat_update(dt)
 end
