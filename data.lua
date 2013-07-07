@@ -10,5 +10,8 @@ SPACEBETWEENHEARTS = 18
 HEARTX = 5
 HEARTY = 5
 
+-- possible change this depending on world
+REACTIONTIME = 0.2
+
 INFOX = 300
 INFOY = 300

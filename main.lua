@@ -369,7 +369,7 @@ function game_update(dt)
 	end
 	
 	if actiontype ~= 0 then
-		if jumptimer < 0.2 then
+		if jumptimer < REACTIONTIME then
 			jumptimer = jumptimer + dt
 			isjumping = true
 		else
