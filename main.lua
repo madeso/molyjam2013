@@ -234,7 +234,7 @@ local levelindex = 1
 local jumptimer = 0
 local isjumping = false
 local gametimer = 0
-local enemytype = 1
+local enemytype = 4
 local actiontype = 1
 
 local levelmusica
@@ -248,6 +248,7 @@ local jumpedstone = false
 local health = MAXHEALTH
 local actionmade = false
 local gotacstat = false
+local baselevel = 1
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -362,7 +363,7 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. " - Debug: " .. tostring(not collided and jumpedstone), 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. "bl: " .. baselevel, 0, 0, 780, "right")
 	for i=1,health do
 		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
 	end
@@ -374,6 +375,8 @@ function game_update(dt)
 	if gametimer < 0 then
 		gametimer = gametimer + 1
 		local leveltype
+		local lastenemy = 0
+		lastenemy = enemytype
 		if levelindex > leveldata:len() then
 			enemytype = 4
 			SetState(STATESTAT)
@@ -397,11 +400,13 @@ function game_update(dt)
 		
 		levelindex = levelindex + 1
 		
-		if collided == false then
+		if collided == false and lastenemy~=4 then
+			print("Gaining some xp")
 			currentxp = currentxp + 1
 			stats.xpgained = stats.xpgained + 1
-			if currentxp >= 20 then
+			if currentxp >= XPLEVEL then
 				currentxp = 0
+				print("newlevel")
 				currentlevel = currentlevel + 1
 				stats.levelsgained = stats.levelsgained + 1
 				levelmusic()
@@ -474,11 +479,12 @@ function game_setup()
 		levelmusicc = hauntedc
 	end
 	
+	baselevel = currentlevel
 	levelindex = 1
 	jumptimer = 0
 	isjumping = false
 	gametimer = 0
-	enemytype = 1
+	enemytype = 4
 	collided = false
 	jumpedstone = false
 	health = MAXHEALTH
@@ -491,18 +497,23 @@ function game_setup()
 	levelmusica:setVolume(0)
 	levelmusicb:setVolume(0)
 	levelmusicc:setVolume(0)
+	
 	levelmusic()
+	print("Base level", baselevel, currentlevel)
 end
 function levelmusic()
 	levelmusica:setVolume(0)
 	levelmusicb:setVolume(0)
 	levelmusicc:setVolume(0)
 	
-	if currentlevel == 1 then
+	if currentlevel == baselevel then
+		print("setting music a", currentlevel, baselevel)
 		levelmusica:setVolume(1)
-	elseif currentlevel == 2 then
+	elseif currentlevel == baselevel+1 then
+		print("setting music b", currentlevel, baselevel)
 		levelmusicb:setVolume(1)
 	else
+		print("setting music c", currentlevel, baselevel)
 		levelmusicc:setVolume(1)
 	end
 end
