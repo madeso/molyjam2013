@@ -12,6 +12,12 @@ For the specific details, please read the full license in the licenses folder, b
 * Music(used with permission) & Sounds(used with permission) by Robbie Dooley
 * Public font, Alex-brush(OFL) by Rosette http://openfontlibrary.org/en/font/alex-brush
 
+Various screens:
+=================
+![Title screen](https://raw.github.com/sirGustav/molyjam2013/master/gfx/title.png)
+![Win screen](https://raw.github.com/sirGustav/molyjam2013/master/gfx/win.png)
+![Fail screen](https://raw.github.com/sirGustav/molyjam2013/master/gfx/fail.png)
+
 Design document that no longer applies
 ================
 
