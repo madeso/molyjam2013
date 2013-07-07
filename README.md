@@ -8,8 +8,8 @@ A musicbased beatem up/fightingbased rythm game. You play a knight fighting mons
 Created by:
 =============
 For the specific details, please read the full license in the licenses folder, but for the lazy this is the general gist:
-* Art(cc) & code(gpl) by Gustav Jansson
-* Music(used with permission) & Sounds(used with permission) by Robbie Dooley
+* Code(gpl) by Gustav Jansson
+* Art(used with permission), Music(used with permission) and Sounds(used with permission) by Robbie Dooley
 * Public font, PressStart2P(OFL) by Cody \'CodeMan38\' Boisclair http://openfontlibrary.org/en/font/press-start-2p
 
 Various screens:
