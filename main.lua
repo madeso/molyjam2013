@@ -136,6 +136,7 @@ local heartgfx = Img("gfx/heart.png")
 local worldindex = 1
 
 local godmode = false
+local currentlevel = 1
 
 -----------------------------------------------------------------------------------------
 
@@ -243,7 +244,6 @@ local levelmusicc
 
 local currentxp = 0
 local collided = false
-local currentlevel = 1
 local jumpedstone = false
 local health = MAXHEALTH
 local actionmade = false
