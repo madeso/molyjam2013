@@ -136,7 +136,27 @@ local heartgfx = Img("gfx/heart.png")
 local worldindex = 1
 
 -----------------------------------------------------------------------------------------
+
+local cheatcode = {"up", "down", "up", "down" , "left", "right", "left", "right", "b", "a", "s"}
+local cheatindex = 1
+local cheattimer = 0
+
 function title_onkey(key)
+	if key == cheatcode[cheatindex] then
+		cheatindex = cheatindex + 1
+		if cheatindex > #cheatcode then
+			Playx(titlemusic)
+			-- setup godmode
+			cheatindex = 1
+			cheattimer = 0
+		else
+			cheattimer = 1
+		end
+	else
+		cheatindex = 0.02
+		cheattimer = 0
+	end
+	
 	if key == " " then
 		worldindex = 1
 		ResetStats()
@@ -149,6 +169,14 @@ function title_draw()
 	Draw(title, 0,0)
 end
 function title_update(dt)
+	if cheattimer > 0 then
+		cheattimer = cheattimer - dt
+		if cheattimer <= 0 then
+			cheattimer = -1
+			cheatindex = 1
+			Play(sfxhurt)
+		end
+	end
 end
 function title_setup()
 	Playx(titlemusic)
