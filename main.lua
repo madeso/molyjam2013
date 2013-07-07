@@ -135,6 +135,8 @@ local heartgfx = Img("gfx/heart.png")
 
 local worldindex = 1
 
+local godmode = false
+
 -----------------------------------------------------------------------------------------
 
 local cheatcode = {"up", "down", "up", "down" , "left", "right", "left", "right", "b", "a", "s"}
@@ -145,15 +147,18 @@ function title_onkey(key)
 	if key == cheatcode[cheatindex] then
 		cheatindex = cheatindex + 1
 		if cheatindex > #cheatcode then
-			Playx(titlemusic)
-			-- setup godmode
+			--Playx(titlemusic)
+			Play(sfxjump)
+			--Play(sfxslash)
+			Play(sfxslide)
+			godmode = true
 			cheatindex = 1
 			cheattimer = 0
 		else
-			cheattimer = 1
+			cheattimer = 0.6
 		end
 	else
-		cheatindex = 0.02
+		cheatindex = 1
 		cheattimer = 0
 	end
 	
@@ -179,6 +184,7 @@ function title_update(dt)
 	end
 end
 function title_setup()
+	godmode = false
 	Playx(titlemusic)
 end
 
@@ -327,7 +333,7 @@ function game_draw()
 						Play(sfxhurt)
 						stats.damagetaken = stats.damagetaken + 1
 						
-						if GODMODE == false then
+						if godmode == false then
 							health = health - 1
 							if health == 0 then
 								SetState(STATEFAIL)
