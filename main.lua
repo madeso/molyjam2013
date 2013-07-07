@@ -135,7 +135,9 @@ local playerslide = Img("gfx/knight/slide0.png")
 local playerjump = Img("gfx/knight/jump0.png")
 local playerattack = Img("gfx/knight/attack6.png")
 local stone = Img("gfx/stone.png")
-local tree = Img("gfx/tree.png")
+local cavetree = Img("gfx/tree/cave.png")
+local hauntedtree = Img("gfx/tree/haunted.png")
+local foresttree = Img("gfx/tree/forest.png")
 local heartgfx = Img("gfx/heart.png")
 
 local worldindex = 1
@@ -266,6 +268,7 @@ local gotacstat = false
 local baselevel = 1
 
 local gamebkg = forestbg
+local tree = foresttree
 
 function game_logic()
 	-- jumpheight less than 60 = player collide with stone & x between -10 and 160
@@ -500,18 +503,21 @@ function game_setup()
 		levelmusicb = forestb
 		levelmusicc = forestc
 		gamebkg = forestbg
+		tree = foresttree
 	elseif worldindex == 2 then
 		leveldata = CAVEDATA
 		levelmusica = cavea
 		levelmusicb = caveb
 		levelmusicc = cavec
 		gamebkg = cavebg
+		tree = cavetree
 	else
 		leveldata = HAUNTEDDATA
 		levelmusica = haunteda
 		levelmusicb = hauntedb
 		levelmusicc = hauntedc
 		gamebkg = hauntedbg
+		tree = hauntedtree
 	end
 	
 	baselevel = currentlevel
