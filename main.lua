@@ -363,7 +363,7 @@ function game_draw()
 	end
 	
 	-- hud
-	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel .. "bl: " .. baselevel, 0, 0, 780, "right")
+	love.graphics.printf("Experience: " .. currentxp .. " & Level: " .. currentlevel, 0, 0, 780, "right")
 	for i=1,health do
 		Draw(heartgfx, HEARTX + (i-1)*SPACEBETWEENHEARTS, HEARTY)
 	end
