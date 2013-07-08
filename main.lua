@@ -586,15 +586,22 @@ function levelmusic()
 	levelmusicb:setVolume(0)
 	levelmusicc:setVolume(0)
 	
-	if currentlevel == baselevel then
-		print("setting music a", currentlevel, baselevel)
-		levelmusica:setVolume(1)
-	elseif currentlevel == baselevel+1 then
+	local add
+	add = 1
+	-- change every other at third level
+	if worldindex == 3 then
+		add = 3
+	end
+	
+	if currentlevel >= baselevel+add*2 then
+		print("setting music c", currentlevel, baselevel)
+		levelmusicc:setVolume(1)
+	elseif currentlevel >= baselevel+add then
 		print("setting music b", currentlevel, baselevel)
 		levelmusicb:setVolume(1)
 	else
-		print("setting music c", currentlevel, baselevel)
-		levelmusicc:setVolume(1)
+		print("setting music a", currentlevel, baselevel)
+		levelmusica:setVolume(1)
 	end
 end
 
