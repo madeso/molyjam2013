@@ -135,7 +135,7 @@ local goblindead = Img("gfx/goblin/dead.png")
 local goblinhappy = Img("gfx/goblin/happy.png")
 local playerslide = {Img("gfx/knight/slide0.png"), Img("gfx/knight/slide1.png")}
 local playerjump = Img("gfx/knight/jump0.png")
-local playerattack = Img("gfx/knight/attack6.png")
+local playerattack = {Img("gfx/knight/attack0.png"),Img("gfx/knight/attack1.png"),Img("gfx/knight/attack2.png"),Img("gfx/knight/attack3.png"),Img("gfx/knight/attack4.png"),Img("gfx/knight/attack5.png"),Img("gfx/knight/attack6.png"),Img("gfx/knight/attack7.png")}
 local stone = Img("gfx/stone/normal.png")
 local stonebroken = Img("gfx/stone/broken.png")
 local cavetree = Img("gfx/tree/cave.png")
@@ -360,7 +360,7 @@ function game_draw()
 		end
 	elseif actiontype == 3 then
 		if dojump then
-			Draw(playerattack, 72,350)
+			Draw(currentsprite(playerattack), 72,350)
 		else
 			Draw(currentsprite(player), 72,350)
 		end
@@ -500,6 +500,7 @@ function game_update(dt)
 			Play(sfxslide)
 		elseif actiontype == 3 then
 			Play(sfxslash)
+			animindex = 1
 		elseif actiontype == 4 then
 			Play(sfxjump)
 		else
