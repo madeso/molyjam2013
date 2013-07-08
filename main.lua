@@ -112,7 +112,8 @@ hauntedc:setLooping(true)
 local titlemusic = Music("music/title.ogg")
 local failmusic = Music("music/defeat.ogg")
 local winmusic = Music("music/victory.ogg")
-local statmusic = winmusic -- might be updated later on, dunno
+local statmusic = Music("music/stat.ogg")
+statmusic:setLooping(true)
 
 local sfxhurt = Sfx("sfx/Hurt.ogg")
 local sfxjump = Sfx("sfx/Jump.ogg")
